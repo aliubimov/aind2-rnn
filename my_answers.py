@@ -33,21 +33,26 @@ def build_part1_RNN(window_size):
 
 ### TODO: return the text input with only ascii lowercase and the punctuation given below included.
 def cleaned_text(text):
-    punctuation = ['!', ',', '.', ':', ';', '?']
+    punctuation = {'!', ',', '.', ':', ';', '?'}
 
-    text = "".join([x if x in punctuation or x in string.ascii_lowercase or x == ' ' else '' for x in text])
+    # This set represents all the allowed chars we want
+    chars = {'a','b','c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's',
+           't', 'u', 'v', 'w', 'x', 'y', 'z', ' '}
+
+    # This set represent all the unique chars in the raw text
+    unique_chars = set(text)
+
+    # Remove not allowed chars
+    for x in unique_chars - chars - punctuation:
+       text = text.replace(x, '')
 
     return text
 
 ### TODO: fill out the function below that transforms the input text and window-size into a set of input/output pairs for use with our RNN model
 def window_transform_text(text, window_size, step_size):
     # containers for input/output pairs
-    inputs = []
-    outputs = []
-
-    for x in range(0, len(text) - window_size, step_size):
-        inputs.append(text[x:x+window_size])
-        outputs.append(text[x + window_size])
+    inputs = [text[s:s+window_size] for s in range(0,len(text)-window_size,step_size)]
+    outputs = [text[s] for s in range(window_size,len(text),step_size)]
 
     return inputs,outputs
 
